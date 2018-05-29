@@ -13,21 +13,22 @@ function getStatus()
 	{
 		echo "Failed to conenct to MySQL: " . mysqli_connect_error();
 	}
-	else
-	{
-		echo "connected";
-	}
 
-		$query = "SELECT * FROM stalls";
-		$result = mysqli_query($con, $query);
-		
-		if(mysqli_num_rows($result) > 0)
+	$query = "SELECT * FROM stalls";
+	$result = mysqli_query($con, $query);
+	
+	if(mysqli_num_rows($result) > 0)
+	{
+		while($row = mysqli_fetch_assoc($result))
 		{
-			while($row = mysqli_fetch_assoc($result))
-			{
-				$actualResult = "Stall: " . $row["id"] . " " . "Occupied: " . $row["occupied"];
+			if($row["occupied"] == 0){
+				$status = "Vacant";
+			}else{
+				$status = "Occupied";
 			}
+			$actualResult = "Stall: " . $row["id"] . " " . "Status: " . $status;
 		}
+	}
 
 	 mysqli_close($con);
 
@@ -38,13 +39,29 @@ function getStatus()
 
 ?>
 <html>
-<body>
+	<head>
+		<link rel="stylesheet" href="./styles.css">
+	</head>
+	<body>
 
-    <?php if (isset($result)) { ?>
-        <h1> Result: <?php echo $result ?></h1>
-    <?php } ?>
-    <form action="" method="post">
-    <p><input type="submit" value="Refresh" /></p>
+	    <div>
+	    	<h1>Floor 7</h1>
+	    	<div class="stall"></div>
+	    	<div class="stall"></div>
+	    	<div id="men1" class="stall">
+	    		<?php 
+			    	if (isset($result)) {
+			    ?>
+	        	<h2><?php echo $result ?></h2>
+			    <?php
+			    	}
+			    ?>
+	    	</div>
+	    	<div class="stall"></div>
+	    </div>
 
-</body>
+	    <form action="" method="post">
+	    <p><input type="submit" value="Refresh" /></p>
+
+	</body>
 </html>
